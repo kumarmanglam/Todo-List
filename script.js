@@ -169,7 +169,8 @@ function displayTaskNumbers() {
 }
 
 function init() {
-  const backData = JSON.parse(localStorage.getItem("tasks"));
+  const storedData = localStorage.getItem("tasks")
+  const backData = storedData ? JSON.parse(storedData): [];
   if (backData && backData.length > 0) {
     tabSetter(backData);
   }
