@@ -24,7 +24,7 @@ function createTaskEl(data) {
   let checkEl = document.createElement("input");
   checkEl.type = "checkbox";
   checkEl.setAttribute("onclick", "handleCheckClick(event)");
-  if (data.status === "completed") {
+  if (data.taskstatus === "completed") {
     checkEl.setAttribute("checked", true);
   }
   //child elements --> input p element
@@ -92,7 +92,7 @@ function handleCheckClick(event) {
   }
   datas.forEach(data => {
     if(data.id  === event.target.parentElement.id){
-      data.status=tempTaskStatus;
+      data.taskstatus=tempTaskStatus;
     }
   })
   localStorage.setItem("tasks", JSON.stringify(datas));
@@ -188,7 +188,7 @@ function init() {
 function tabSetter(backData) {
   if (backData && backData.length > 0) {
     backData.forEach(data => {
-      const parent = document.getElementById(`${data.status}`);
+      const parent = document.getElementById(`${data.taskstatus}`);
       parent.appendChild(createTaskEl(data));
     });
   }
