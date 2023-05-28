@@ -1,7 +1,7 @@
 "use strict";
 const inputEl = document.querySelector(".task-name");
 //variables
-let bdatas = [];
+let datas = [];
 let tabselected = "";
 
 //create a task element 
@@ -24,7 +24,7 @@ function createTaskEl(data) {
   let checkEl = document.createElement("input");
   checkEl.type = "checkbox";
   checkEl.setAttribute("onclick", "handleCheckClick(event)");
-  if (data.taskstatus === "completed") {
+  if (data.status === "completed") {
     checkEl.setAttribute("checked", true);
   }
   //child elements --> input p element
@@ -64,10 +64,10 @@ function handleSubmitClick(event) {
     const newTaskEL = createTaskEl(newtaskdata);
     const pendingContainer = document.getElementById("pending");
     pendingContainer.appendChild(newTaskEL);
-    bdatas.push(newtaskdata);
-    console.log(bdatas);
+    datas.push(newtaskdata);
+    console.log(datas);
     localStorage.removeItem("tasks");
-    localStorage.setItem("tasks",JSON.stringify(bdatas));
+    localStorage.setItem("tasks",JSON.stringify(datas));
     displayTaskNumbers();
   } else {
     alert("cannot enter empty task!");
@@ -79,6 +79,7 @@ function handleSubmitClick(event) {
 init();
 //checkbox click handling function
 function handleCheckClick(event) {
+  console.log(event.target.parentElement.id);
   let tempTaskStatus = "";
   if (event.currentTarget.checked) {
     const completedContainer = document.getElementById("completed");
@@ -89,6 +90,12 @@ function handleCheckClick(event) {
     tempTaskStatus = "pending";
     pendingContainer.appendChild(event.currentTarget.parentElement);
   }
+  datas.forEach(data => {
+    if(data.id  === event.target.parentElement.id){
+      data.status=tempTaskStatus;
+    }
+  })
+  localStorage.setItem("tasks", JSON.stringify(datas));
   displayTaskNumbers();
 }
 
@@ -97,14 +104,14 @@ function handleDeleteClick(event) {
   const taskId = event.currentTarget.parentElement.getAttribute("id");
   const parent = event.currentTarget.parentElement.parentElement;
   parent.removeChild(event.currentTarget.parentElement)
-  bdatas.forEach((data, index) =>{
+  datas.forEach((data, index) =>{
     if(data.id === taskId) {
-      bdatas.splice(index,1);
+      datas.splice(index,1);
     }
   });
   displayTaskNumbers();
   localStorage.removeItem("tasks");
-  localStorage.setItem("tasks", JSON.stringify(bdatas));
+  localStorage.setItem("tasks", JSON.stringify(datas));
 }
 
 //function to give tab feature
@@ -151,12 +158,12 @@ function handleTabSwitch(event) {
 
 // function to update taskstatus 
 function updateTaskStatus(status,id) {
-  bdatas.forEach(item => {
+  datas.forEach(item => {
     if (item.id === id) {
       item.taskstatus = status;
     }
   })
-  localStorage.setItem("tasks", JSON.stringify(bdatas));
+  localStorage.setItem("tasks", JSON.stringify(datas));
 }
 
 function displayTaskNumbers() {
@@ -174,14 +181,14 @@ function init() {
   if (backData && backData.length > 0) {
     tabSetter(backData);
   }
-  bdatas = backData;
-  displayTaskNumbers()
+  datas = backData;
+  displayTaskNumbers();
 }
 
 function tabSetter(backData) {
   if (backData && backData.length > 0) {
     backData.forEach(data => {
-      const parent = document.getElementById(`${data.taskstatus}`);
+      const parent = document.getElementById(`${data.status}`);
       parent.appendChild(createTaskEl(data));
     });
   }
@@ -192,12 +199,12 @@ function handleEdit(event) {
   const currId = event.currentTarget.parentElement.id;
   if (event.key === "Enter") {
     event.preventDefault();
-    bdatas.forEach(item => {
+    datas.forEach(item => {
       if (currId === item.id) {
         item.task = editedTask;
       }
     });
-    localStorage.setItem("tasks", JSON.stringify(bdatas));
+    localStorage.setItem("tasks", JSON.stringify(datas));
   }
 }
 
