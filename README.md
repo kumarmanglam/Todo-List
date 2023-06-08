@@ -1,3 +1,3 @@
 # Todo-List
 
-https://todolistbymanglam.netlify.app/
+https://todoappbymanglam.netlify.app/
